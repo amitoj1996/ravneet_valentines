@@ -1,0 +1,1601 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>For Buggu 💕</title>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600;700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        /* ============================================
+           RESET & BASE
+           ============================================ */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            overflow: hidden;
+            width: 100vw;
+            height: 100vh;
+            background: #0a0a2e;
+            color: white;
+            -webkit-tap-highlight-color: transparent;
+            user-select: none;
+        }
+
+        .cursive {
+            font-family: 'Dancing Script', cursive;
+        }
+
+        /* ============================================
+           SCENE CONTAINERS
+           ============================================ */
+        .scene {
+            position: fixed;
+            inset: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.8s ease;
+            z-index: 10;
+            padding: 20px;
+        }
+
+        .scene.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        /* ============================================
+           BACKGROUNDS
+           ============================================ */
+        #bg-layer {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            transition: background 1.5s ease;
+            background: #0a0a2e;
+        }
+
+        #bg-layer.splash-bg {
+            background: radial-gradient(ellipse at 50% 50%, #1a1a4e 0%, #0a0a2e 70%);
+        }
+
+        #bg-layer.question-bg {
+            background: linear-gradient(135deg, #1a0a2e 0%, #2d1b4e 30%, #4a1942 70%, #2d1b4e 100%);
+        }
+
+        #bg-layer.sad-bg {
+            background: linear-gradient(135deg, #1a1a2e 0%, #2a2a3e 50%, #1a1a2e 100%) !important;
+        }
+
+        #bg-layer.celebration-bg {
+            background: linear-gradient(135deg, #2d0a3e 0%, #4a1942 30%, #6b2158 60%, #4a1942 100%);
+        }
+
+        #bg-layer.door-bg {
+            background: radial-gradient(ellipse at 50% 60%, #1a0a3e 0%, #0a0a1e 70%);
+        }
+
+        #bg-layer.letter-bg {
+            background: linear-gradient(180deg, #1a0a2e 0%, #2d1b3e 30%, #3d1b3e 100%);
+        }
+
+        /* ============================================
+           STARS
+           ============================================ */
+        #stars-container {
+            position: fixed;
+            inset: 0;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        .star {
+            position: absolute;
+            background: white;
+            border-radius: 50%;
+            animation: twinkle var(--dur) infinite alternate;
+            animation-delay: var(--delay);
+        }
+
+        @keyframes twinkle {
+            from { opacity: 0.2; transform: scale(0.8); }
+            to { opacity: 1; transform: scale(1.2); }
+        }
+
+        /* ============================================
+           FLOATING HEARTS
+           ============================================ */
+        #hearts-container {
+            position: fixed;
+            inset: 0;
+            z-index: 2;
+            pointer-events: none;
+            overflow: hidden;
+        }
+
+        .floating-heart {
+            position: absolute;
+            bottom: -30px;
+            animation: floatUp var(--float-dur, 6s) linear forwards;
+            opacity: var(--heart-opacity, 0.5);
+            font-size: var(--heart-size, 16px);
+            filter: blur(var(--heart-blur, 0px));
+        }
+
+        @keyframes floatUp {
+            0% { transform: translateY(0) rotate(0deg) scale(1); }
+            50% { transform: translateY(-55vh) rotate(180deg) scale(1.1); }
+            100% { transform: translateY(-110vh) rotate(360deg) scale(0.8); opacity: 0; }
+        }
+
+        /* ============================================
+           SPLASH SCREEN
+           ============================================ */
+        #splash {
+            z-index: 20;
+            cursor: pointer;
+        }
+
+        .splash-title {
+            font-size: clamp(1.5rem, 5vw, 3rem);
+            letter-spacing: 2px;
+            animation: gentlePulse 2s ease-in-out infinite;
+            text-shadow: 0 0 30px rgba(255, 105, 180, 0.5);
+            text-align: center;
+        }
+
+        .splash-subtitle {
+            margin-top: 20px;
+            font-size: clamp(0.8rem, 2.5vw, 1rem);
+            opacity: 0.6;
+            animation: fadeInUp 1.5s ease 0.5s both;
+        }
+
+        .splash-heart {
+            font-size: clamp(3rem, 10vw, 5rem);
+            margin-bottom: 30px;
+            animation: heartbeat 1.2s ease-in-out infinite;
+        }
+
+        @keyframes heartbeat {
+            0%, 100% { transform: scale(1); }
+            15% { transform: scale(1.15); }
+            30% { transform: scale(1); }
+            45% { transform: scale(1.1); }
+        }
+
+        @keyframes gentlePulse {
+            0%, 100% { opacity: 0.9; }
+            50% { opacity: 1; text-shadow: 0 0 40px rgba(255, 105, 180, 0.8); }
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 0.6; transform: translateY(0); }
+        }
+
+        /* ============================================
+           QUESTION SCREEN
+           ============================================ */
+        #question {
+            gap: 20px;
+        }
+
+        .question-text {
+            font-size: clamp(1.8rem, 6vw, 3.5rem);
+            text-align: center;
+            line-height: 1.4;
+            text-shadow: 0 0 30px rgba(255, 105, 180, 0.4);
+            opacity: 0;
+            animation: fadeInUp 1s ease forwards;
+        }
+
+        .question-sub {
+            font-size: clamp(1rem, 3.5vw, 1.8rem);
+            opacity: 0;
+            animation: fadeInUp 1s ease 0.8s forwards;
+            text-align: center;
+        }
+
+        .buttons-container {
+            display: flex;
+            gap: 25px;
+            margin-top: 30px;
+            flex-wrap: wrap;
+            justify-content: center;
+            opacity: 0;
+            animation: fadeInUp 1s ease 1.5s forwards;
+            min-height: 80px;
+            position: relative;
+        }
+
+        .btn-yes, .btn-no {
+            padding: 15px 45px;
+            border: none;
+            border-radius: 50px;
+            font-family: 'Poppins', sans-serif;
+            font-size: clamp(1rem, 3vw, 1.3rem);
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            letter-spacing: 1px;
+        }
+
+        .btn-yes {
+            background: linear-gradient(135deg, #ff69b4, #ff1493);
+            color: white;
+            box-shadow: 0 4px 20px rgba(255, 20, 147, 0.4);
+            z-index: 5;
+        }
+
+        .btn-yes:hover {
+            transform: scale(1.08);
+            box-shadow: 0 6px 30px rgba(255, 20, 147, 0.6);
+        }
+
+        .btn-no {
+            background: rgba(255, 255, 255, 0.1);
+            color: rgba(255, 255, 255, 0.7);
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            transition: all 0.25s ease;
+        }
+
+        .btn-no:hover {
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        /* Sad messages */
+        .sad-message {
+            position: fixed;
+            font-size: clamp(0.9rem, 2.5vw, 1.2rem);
+            animation: sadPop 2s ease forwards;
+            pointer-events: none;
+            z-index: 100;
+            text-align: center;
+            white-space: nowrap;
+        }
+
+        @keyframes sadPop {
+            0% { opacity: 0; transform: translateY(0) scale(0.5); }
+            20% { opacity: 1; transform: translateY(-20px) scale(1); }
+            100% { opacity: 0; transform: translateY(-80px) scale(0.8); }
+        }
+
+        /* Sad emoji rain */
+        .sad-emoji {
+            position: fixed;
+            font-size: 24px;
+            animation: sadFall 2.5s linear forwards;
+            pointer-events: none;
+            z-index: 99;
+        }
+
+        @keyframes sadFall {
+            0% { opacity: 1; transform: translateY(-20px); }
+            100% { opacity: 0; transform: translateY(100vh); }
+        }
+
+        /* Tear drops */
+        .tear {
+            position: fixed;
+            width: 8px;
+            height: 12px;
+            background: rgba(100, 149, 237, 0.6);
+            border-radius: 0 50% 50% 50%;
+            transform: rotate(45deg);
+            animation: tearFall 1.5s linear forwards;
+            pointer-events: none;
+            z-index: 98;
+        }
+
+        @keyframes tearFall {
+            0% { opacity: 0.8; transform: rotate(45deg) translateY(0); }
+            100% { opacity: 0; transform: rotate(45deg) translateY(100vh); }
+        }
+
+        /* ============================================
+           CELEBRATION SCREEN
+           ============================================ */
+        #celebration {
+            z-index: 30;
+        }
+
+        .celebration-text {
+            font-size: clamp(2rem, 7vw, 4rem);
+            text-align: center;
+            animation: celebrationPop 0.6s cubic-bezier(0.17, 0.67, 0.29, 1.5) forwards;
+            text-shadow: 0 0 40px rgba(255, 105, 180, 0.8);
+        }
+
+        .celebration-sub {
+            font-size: clamp(1rem, 3vw, 1.5rem);
+            margin-top: 15px;
+            opacity: 0;
+            animation: fadeInUp 1s ease 1s forwards;
+        }
+
+        @keyframes celebrationPop {
+            0% { transform: scale(0); opacity: 0; }
+            60% { transform: scale(1.2); }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        /* ============================================
+           DOOR SCREEN
+           ============================================ */
+        #door-scene {
+            z-index: 35;
+            perspective: 1200px;
+        }
+
+        .door-title {
+            font-size: clamp(1.3rem, 4vw, 2rem);
+            margin-bottom: 30px;
+            opacity: 0;
+            animation: fadeInUp 1s ease forwards;
+            text-shadow: 0 0 20px rgba(255, 105, 180, 0.5);
+            text-align: center;
+        }
+
+        .door-wrapper {
+            position: relative;
+            width: clamp(180px, 40vw, 260px);
+            height: clamp(280px, 55vh, 400px);
+            cursor: pointer;
+            transform-style: preserve-3d;
+        }
+
+        .door-glow {
+            position: absolute;
+            inset: -20px;
+            background: radial-gradient(ellipse, rgba(255, 215, 0, 0.3), transparent 70%);
+            border-radius: 20px;
+            opacity: 0;
+            transition: opacity 2s ease;
+            z-index: 0;
+        }
+
+        .door-glow.visible {
+            opacity: 1;
+        }
+
+        .door-frame {
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(180deg, #c44480, #a83268);
+            border-radius: 24px 24px 0 0;
+            padding: 10px;
+            position: relative;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            transform-style: preserve-3d;
+        }
+
+        .door-panel {
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(180deg, #ff69b4 0%, #ff1493 40%, #e91280 100%);
+            border-radius: 16px 16px 0 0;
+            position: relative;
+            transform-origin: left center;
+            transition: transform 2s cubic-bezier(0.2, 0.8, 0.2, 1);
+            box-shadow: inset -3px 0 10px rgba(0, 0, 0, 0.1), inset 0 2px 0 rgba(255, 255, 255, 0.2);
+            transform-style: preserve-3d;
+            backface-visibility: hidden;
+        }
+
+        .door-panel.open {
+            transform: rotateY(-115deg);
+        }
+
+        .door-panel::before {
+            content: '';
+            position: absolute;
+            top: 15%;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 40%;
+            height: 25%;
+            border: 3px solid rgba(255, 255, 255, 0.15);
+            border-radius: 8px;
+        }
+
+        .door-panel::after {
+            content: '';
+            position: absolute;
+            bottom: 15%;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 40%;
+            height: 25%;
+            border: 3px solid rgba(255, 255, 255, 0.15);
+            border-radius: 8px;
+        }
+
+        .door-knob-container {
+            position: absolute;
+            right: 15%;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 5;
+        }
+
+        .door-knob {
+            width: clamp(22px, 4vw, 32px);
+            height: clamp(22px, 4vw, 32px);
+            background: radial-gradient(circle at 35% 35%, #ffd700, #daa520, #b8860b);
+            border-radius: 50%;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4), inset 0 1px 2px rgba(255, 255, 255, 0.5);
+            animation: knobGlow 2s ease-in-out infinite;
+        }
+
+        @keyframes knobGlow {
+            0%, 100% { box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4), 0 0 15px rgba(255, 215, 0, 0.3); }
+            50% { box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4), 0 0 30px rgba(255, 215, 0, 0.6); }
+        }
+
+        .door-light {
+            position: absolute;
+            inset: 10px;
+            background: radial-gradient(ellipse at center, rgba(255, 240, 200, 0.9), rgba(255, 200, 150, 0.6) 50%, transparent 80%);
+            border-radius: 14px 14px 0 0;
+            opacity: 0;
+            transition: opacity 1.5s ease 0.5s;
+            z-index: -1;
+        }
+
+        .door-light.visible {
+            opacity: 1;
+        }
+
+        .door-hint {
+            margin-top: 25px;
+            font-size: clamp(0.8rem, 2.5vw, 1rem);
+            opacity: 0;
+            animation: fadeInUp 1s ease 1s forwards;
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        .door-and-doraemon {
+            display: flex;
+            align-items: flex-end;
+            gap: 15px;
+        }
+
+        /* ============================================
+           DORAEMON
+           ============================================ */
+        .doraemon {
+            --size: clamp(80px, 18vw, 120px);
+            width: var(--size);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            animation: doraemonBob 2s ease-in-out infinite;
+            flex-shrink: 0;
+        }
+
+        @keyframes doraemonBob {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-5px); }
+        }
+
+        /* Head */
+        .dora-head {
+            width: 100%;
+            aspect-ratio: 1;
+            background: #00a0dc;
+            border-radius: 50%;
+            position: relative;
+            z-index: 2;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+        }
+
+        .dora-face {
+            position: absolute;
+            width: 80%;
+            height: 75%;
+            background: white;
+            border-radius: 50%;
+            bottom: 5%;
+            left: 10%;
+        }
+
+        /* Eyes */
+        .dora-eyes {
+            display: flex;
+            justify-content: center;
+            gap: 2px;
+            position: absolute;
+            top: 8%;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .dora-eye {
+            width: calc(var(--size) * 0.2);
+            height: calc(var(--size) * 0.24);
+            background: white;
+            border-radius: 50%;
+            border: 1.5px solid #333;
+            position: relative;
+        }
+
+        .dora-pupil {
+            width: 40%;
+            height: 45%;
+            background: #333;
+            border-radius: 50%;
+            position: absolute;
+            bottom: 20%;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        /* Nose */
+        .dora-nose {
+            width: calc(var(--size) * 0.14);
+            height: calc(var(--size) * 0.14);
+            background: #e74c3c;
+            border-radius: 50%;
+            position: absolute;
+            top: 32%;
+            left: 50%;
+            transform: translateX(-50%);
+            box-shadow: inset -1px -1px 2px rgba(0,0,0,0.2), 1px 1px 2px rgba(255,255,255,0.4);
+            z-index: 2;
+        }
+
+        .dora-nose-line {
+            position: absolute;
+            top: 42%;
+            left: 50%;
+            width: 1.5px;
+            height: 22%;
+            background: #333;
+            transform: translateX(-50%);
+        }
+
+        /* Mouth */
+        .dora-mouth {
+            position: absolute;
+            top: 45%;
+            left: 15%;
+            width: 70%;
+            height: 35%;
+            border-bottom: 2px solid #333;
+            border-radius: 0 0 50% 50%;
+        }
+
+        /* Whiskers */
+        .dora-whiskers-left, .dora-whiskers-right {
+            position: absolute;
+            top: 38%;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .dora-whiskers-left { left: -5%; }
+        .dora-whiskers-right { right: -5%; }
+
+        .dora-whisker {
+            width: calc(var(--size) * 0.22);
+            height: 1.5px;
+            background: #333;
+        }
+
+        .dora-whiskers-left .dora-whisker:first-child { transform: rotate(-15deg); }
+        .dora-whiskers-left .dora-whisker:last-child { transform: rotate(15deg); }
+        .dora-whiskers-right .dora-whisker:first-child { transform: rotate(15deg); }
+        .dora-whiskers-right .dora-whisker:last-child { transform: rotate(-15deg); }
+
+        /* Collar */
+        .dora-collar {
+            width: 75%;
+            height: calc(var(--size) * 0.1);
+            background: #e74c3c;
+            border-radius: 0 0 4px 4px;
+            margin-top: -5%;
+            position: relative;
+            z-index: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .dora-bell {
+            width: calc(var(--size) * 0.12);
+            height: calc(var(--size) * 0.12);
+            background: radial-gradient(circle at 40% 35%, #ffd700, #daa520);
+            border-radius: 50%;
+            border: 1px solid #b8860b;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+        }
+
+        /* Body */
+        .dora-body {
+            width: 70%;
+            height: calc(var(--size) * 0.45);
+            background: #00a0dc;
+            border-radius: 0 0 40% 40%;
+            position: relative;
+            display: flex;
+            justify-content: center;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+        }
+
+        .dora-belly {
+            width: 70%;
+            height: 80%;
+            background: white;
+            border-radius: 50%;
+            position: absolute;
+            top: 5%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .dora-pocket {
+            width: 55%;
+            height: 40%;
+            background: white;
+            border: 1.5px solid #ddd;
+            border-radius: 0 0 50% 50%;
+            margin-top: 20%;
+        }
+
+        /* Arms */
+        .dora-arm {
+            width: calc(var(--size) * 0.18);
+            height: calc(var(--size) * 0.28);
+            background: #00a0dc;
+            position: absolute;
+            top: 10%;
+            border-radius: 40%;
+        }
+
+        .dora-arm-left {
+            left: -18%;
+            transform: rotate(15deg);
+        }
+
+        .dora-arm-right {
+            right: -18%;
+            transform: rotate(-15deg);
+            animation: doraWave 1.5s ease-in-out infinite;
+            transform-origin: top center;
+        }
+
+        @keyframes doraWave {
+            0%, 100% { transform: rotate(-15deg); }
+            50% { transform: rotate(-35deg); }
+        }
+
+        /* Feet */
+        .dora-feet {
+            display: flex;
+            gap: 4px;
+            margin-top: -2px;
+        }
+
+        .dora-foot {
+            width: calc(var(--size) * 0.22);
+            height: calc(var(--size) * 0.1);
+            background: white;
+            border-radius: 50%;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+
+        /* ============================================
+           PHOTO GALLERY SCREEN
+           ============================================ */
+        #photo-gallery {
+            z-index: 38;
+            padding: 0;
+            cursor: pointer;
+            overflow: hidden;
+            background: #0a0a1e;
+        }
+
+        /* Vignette overlay */
+        #photo-gallery::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(ellipse at center, transparent 50%, rgba(0,0,0,0.5) 100%);
+            z-index: 3;
+            pointer-events: none;
+        }
+
+        .gallery-photo {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            padding: 30px;
+            opacity: 0;
+            transform: scale(0.3) rotate(15deg);
+            transition: opacity 0.5s ease, transform 0.6s cubic-bezier(0.17, 0.67, 0.29, 1.2);
+        }
+
+        .gallery-photo.active {
+            opacity: 1;
+            transform: scale(1) rotate(0deg);
+        }
+
+        .gallery-photo.exit-left {
+            opacity: 0;
+            transform: translateX(-120%) rotate(-20deg) scale(0.7);
+            transition: opacity 0.4s ease, transform 0.5s ease-in;
+        }
+
+        .gallery-photo.exit-right {
+            opacity: 0;
+            transform: translateX(120%) rotate(20deg) scale(0.7);
+            transition: opacity 0.4s ease, transform 0.5s ease-in;
+        }
+
+        .gallery-photo.exit-spin {
+            opacity: 0;
+            transform: scale(0.1) rotate(360deg);
+            transition: opacity 0.4s ease, transform 0.6s ease-in;
+        }
+
+        .gallery-counter {
+            position: absolute;
+            bottom: 25px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.6);
+            z-index: 5;
+            text-shadow: 0 1px 4px rgba(0,0,0,0.5);
+        }
+
+        .gallery-hint {
+            position: absolute;
+            bottom: 50px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: clamp(0.8rem, 2.5vw, 1rem);
+            color: rgba(255, 255, 255, 0.5);
+            z-index: 5;
+            animation: gentlePulse 2s ease-in-out infinite;
+            white-space: nowrap;
+            text-shadow: 0 1px 4px rgba(0,0,0,0.5);
+        }
+
+        /* ============================================
+           LOVE LETTER SCREEN
+           ============================================ */
+        #love-letter {
+            z-index: 40;
+            padding: 30px 20px;
+            overflow-y: scroll;
+            gap: 20px;
+            justify-content: flex-start;
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+
+        #love-letter::-webkit-scrollbar {
+            display: none;
+        }
+
+        .letter-container {
+            max-width: 500px;
+            width: 100%;
+            text-align: center;
+        }
+
+        .letter-text {
+            font-size: clamp(0.95rem, 2.8vw, 1.15rem);
+            line-height: 1.9;
+            color: rgba(255, 255, 255, 0.9);
+            white-space: pre-wrap;
+            min-height: 100px;
+        }
+
+        .typing-cursor {
+            color: #ff69b4;
+            font-weight: 300;
+            animation: blink 0.8s step-end infinite;
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
+        }
+
+        .letter-signature {
+            margin-top: 20px;
+            font-size: clamp(1.2rem, 3.5vw, 1.6rem);
+            color: #ff69b4;
+            opacity: 0;
+            transition: opacity 1s ease;
+        }
+
+        .letter-signature.visible {
+            opacity: 1;
+        }
+
+        .replay-btn {
+            margin-top: 25px;
+            padding: 12px 35px;
+            background: linear-gradient(135deg, #ff69b4, #ff1493);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            font-family: 'Poppins', sans-serif;
+            font-size: 1rem;
+            cursor: pointer;
+            opacity: 0;
+            transition: all 0.3s ease;
+            letter-spacing: 1px;
+        }
+
+        .replay-btn.visible {
+            opacity: 1;
+        }
+
+        .replay-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 20px rgba(255, 20, 147, 0.5);
+        }
+
+        /* No photos placeholder */
+        .no-photos-msg {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            background: linear-gradient(135deg, #2d1b4e, #4a1942);
+        }
+
+        /* ============================================
+           CONFETTI CANVAS
+           ============================================ */
+        #confetti-canvas {
+            position: fixed;
+            inset: 0;
+            z-index: 200;
+            pointer-events: none;
+        }
+
+        /* ============================================
+           RESPONSIVE
+           ============================================ */
+        @media (max-height: 600px) {
+            .door-wrapper {
+                height: clamp(200px, 45vh, 300px);
+            }
+            .slideshow {
+                height: clamp(140px, 30vh, 220px);
+            }
+        }
+
+        @media (max-width: 380px) {
+            .buttons-container { gap: 15px; }
+            .btn-yes, .btn-no { padding: 12px 30px; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Background layer -->
+    <div id="bg-layer" class="splash-bg"></div>
+
+    <!-- Stars -->
+    <div id="stars-container"></div>
+
+    <!-- Floating hearts -->
+    <div id="hearts-container"></div>
+
+    <!-- Confetti canvas -->
+    <canvas id="confetti-canvas"></canvas>
+
+    <!-- ===== SCENE 0: SPLASH ===== -->
+    <div id="splash" class="scene active">
+        <div class="splash-heart">💪</div>
+        <div class="splash-title cursive">Darda kyon hai Singh, dabde click</div>
+        <div class="splash-subtitle">aapan dabna ni haiga</div>
+    </div>
+
+    <!-- ===== SCENE 1: QUESTION ===== -->
+    <div id="question" class="scene">
+        <div class="question-text cursive">Buggu...</div>
+        <div class="question-sub">Will you be my Valentine? 💕</div>
+        <div class="question-sub" style="animation-delay: 1.2s; font-size: clamp(0.8rem, 2.5vw, 1rem); opacity: 0;">No dabb ke tan dekh 😡</div>
+        <div class="buttons-container" id="buttons-area">
+            <button class="btn-yes" id="btn-yes">Yes! 💕</button>
+            <button class="btn-no" id="btn-no">No</button>
+        </div>
+    </div>
+
+    <!-- ===== SCENE 2: CELEBRATION ===== -->
+    <div id="celebration" class="scene">
+        <div class="celebration-text cursive" id="celeb-main">Huh, mainu tan pta hi c tusin haan karoge 😎</div>
+        <div class="celebration-sub" id="celeb-sub"></div>
+    </div>
+
+    <!-- ===== SCENE 3: DOOR ===== -->
+    <div id="door-scene" class="scene">
+        <div class="door-title cursive">The Anywhere Door...</div>
+        <div class="door-and-doraemon">
+            <!-- Doraemon -->
+            <div class="doraemon">
+                <div class="dora-head">
+                    <div class="dora-face">
+                        <div class="dora-eyes">
+                            <div class="dora-eye"><div class="dora-pupil"></div></div>
+                            <div class="dora-eye"><div class="dora-pupil"></div></div>
+                        </div>
+                        <div class="dora-nose"></div>
+                        <div class="dora-nose-line"></div>
+                        <div class="dora-mouth"></div>
+                        <div class="dora-whiskers-left">
+                            <div class="dora-whisker"></div>
+                            <div class="dora-whisker"></div>
+                            <div class="dora-whisker"></div>
+                        </div>
+                        <div class="dora-whiskers-right">
+                            <div class="dora-whisker"></div>
+                            <div class="dora-whisker"></div>
+                            <div class="dora-whisker"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="dora-collar">
+                    <div class="dora-bell"></div>
+                </div>
+                <div class="dora-body">
+                    <div class="dora-belly">
+                        <div class="dora-pocket"></div>
+                    </div>
+                    <div class="dora-arm dora-arm-left"></div>
+                    <div class="dora-arm dora-arm-right"></div>
+                </div>
+                <div class="dora-feet">
+                    <div class="dora-foot"></div>
+                    <div class="dora-foot"></div>
+                </div>
+            </div>
+            <!-- Door -->
+            <div class="door-wrapper" id="door-wrapper">
+                <div class="door-glow" id="door-glow"></div>
+                <div class="door-frame">
+                    <div class="door-light" id="door-light"></div>
+                    <div class="door-panel" id="door-panel">
+                        <div class="door-knob-container">
+                            <div class="door-knob"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="door-hint">tap the door to open it</div>
+    </div>
+
+    <!-- ===== SCENE 4: PHOTO GALLERY ===== -->
+    <div id="photo-gallery" class="scene">
+        <div class="gallery-hint">tap to see next</div>
+        <div class="gallery-counter" id="gallery-counter"></div>
+    </div>
+
+    <!-- ===== SCENE 5: LOVE LETTER ===== -->
+    <div id="love-letter" class="scene">
+        <div class="letter-container">
+            <div class="letter-text" id="letter-text"></div>
+            <div class="letter-signature cursive" id="letter-signature">Forever yours 💕</div>
+        </div>
+        <button class="replay-btn" id="replay-btn" onclick="replay()">Open the Door Again 💕</button>
+    </div>
+
+    <!-- Audio -->
+    <audio id="bg-music" loop preload="auto">
+        <source src="music/song.mp3" type="audio/mpeg">
+    </audio>
+
+    <script>
+    /* ================================================
+       CONFIGURATION - CUSTOMIZE THIS SECTION!
+       ================================================
+       1. Add your photos to the photos/ folder
+       2. List them below in the photos array
+       3. Edit the love letter text
+       4. Add your song as music/song.mp3
+       ================================================ */
+    const CONFIG = {
+        name: "Buggu",
+
+        photos: [
+            "photos/1.jpeg",
+            "photos/2.jpeg",
+            "photos/3.jpeg",
+            "photos/4.jpeg",
+            "photos/5.jpeg",
+            "photos/6.jpeg",
+        ],
+
+        loveLetter:
+`Buggu...
+
+Tuhanu pata, jado vi main tuhade naal huna,
+lagda jive time ruk jaanda.
+
+Par jado aapan dur hune aan na,
+har pal tenu yaad karda ae mera dil.
+
+Main galtiyan kariyan ne, kade ni si ke
+mere putt da aina mann dukhaunga.
+Har din aapne aap nu kosdan.
+Ke tainu bas samjhavan ke kina pyaar hai
+
+Main tere te marda mitda han sohneya. Tere jism nu,
+tere pyaar nu crave karda han. Tun kinni hot han na
+tainu pta vi ni haiga. Ik vigde munde nu sidha kar sakdi
+hai tun, aapne piche pagal kar sakdi hai. Te main sabh ton zyada
+lucky han ke is duniya ch sirf tun mainu aapne kaabil chuneya
+
+Tainu pta ae aapan har vaari gall karde han
+ke ik Anywhere Door hove,
+te aapan bhaj ke aake ik duje nu ghut liye.
+
+Te main hamesha tere baare sochda aa.
+
+Jado tak asli Anywhere Door nahi aunda...
+mera dil tere kol hi rehnda ae.
+
+Happy Valentine's Day, Buggu.
+Tu meri duniya ae. ❤️`,
+
+        signature: "Hamesha tera 💕",
+    };
+
+    /* ================================================
+       STATE
+       ================================================ */
+    let audioCtx = null;
+    let currentScene = 'splash';
+    let noAttempts = 0;
+    let heartsInterval = null;
+    let slideshowInterval = null;
+    let currentSlide = 0;
+    let confettiParticles = [];
+    let confettiRunning = false;
+
+    const sadMessages = [
+        "Ohho! No kyun? 😢",
+        "Buggu please... 🥺",
+        "Soch ke dassi... 💔",
+        "Mera dil tod degi? 😭",
+        "Ik vaari No dabb ke tan dekh! 😡",
+        "Chalo ek hor chance... 🙏",
+        "Main ro paina... 😢",
+        "No ta nahi chalda! 💔",
+        "Please Buggu... 🥺",
+    ];
+
+    /* ================================================
+       AUDIO (background music only, no sound effects)
+       ================================================ */
+    function initAudio() {
+        // Try playing background music
+        const music = document.getElementById('bg-music');
+        music.volume = 0.4;
+        music.play().catch(() => {});
+    }
+
+    function playSadSound() {}
+    function playCelebrationSound() {}
+    function playDoorCreak() {}
+    function playAmbientPad() {}
+
+    /* ================================================
+       STARS GENERATION
+       ================================================ */
+    function createStars() {
+        const container = document.getElementById('stars-container');
+        for (let i = 0; i < 120; i++) {
+            const star = document.createElement('div');
+            star.classList.add('star');
+            star.style.left = Math.random() * 100 + '%';
+            star.style.top = Math.random() * 100 + '%';
+            const size = Math.random() * 2.5 + 0.5;
+            star.style.width = size + 'px';
+            star.style.height = size + 'px';
+            star.style.setProperty('--dur', (Math.random() * 3 + 1.5) + 's');
+            star.style.setProperty('--delay', Math.random() * 3 + 's');
+            container.appendChild(star);
+        }
+    }
+
+    /* ================================================
+       FLOATING HEARTS
+       ================================================ */
+    function startHearts() {
+        if (heartsInterval) return;
+        const emojis = ['💕', '💗', '💖', '❤️', '💝', '💘', '✨'];
+        heartsInterval = setInterval(() => {
+            const heart = document.createElement('div');
+            heart.classList.add('floating-heart');
+            heart.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+            heart.style.left = Math.random() * 100 + 'vw';
+            const size = Math.random() * 18 + 10;
+            heart.style.setProperty('--heart-size', size + 'px');
+            heart.style.setProperty('--heart-opacity', (Math.random() * 0.4 + 0.2).toFixed(2));
+            heart.style.setProperty('--float-dur', (Math.random() * 4 + 5) + 's');
+            heart.style.setProperty('--heart-blur', (Math.random() > 0.7 ? '1px' : '0px'));
+            document.getElementById('hearts-container').appendChild(heart);
+            heart.addEventListener('animationend', () => heart.remove());
+        }, 400);
+    }
+
+    function stopHearts() {
+        clearInterval(heartsInterval);
+        heartsInterval = null;
+    }
+
+    /* ================================================
+       SCENE MANAGEMENT
+       ================================================ */
+    function showScene(name) {
+        document.querySelectorAll('.scene').forEach(s => s.classList.remove('active'));
+        const scene = document.getElementById(name);
+        if (scene) scene.classList.add('active');
+        currentScene = name;
+    }
+
+    function setBg(className) {
+        const bg = document.getElementById('bg-layer');
+        bg.className = '';
+        bg.id = 'bg-layer';
+        bg.classList.add(className);
+    }
+
+    /* ================================================
+       SPLASH HANDLER
+       ================================================ */
+    document.getElementById('splash').addEventListener('click', () => {
+        if (currentScene !== 'splash') return;
+        initAudio();
+        playAmbientPad();
+        startHearts();
+        showScene('question');
+        setBg('question-bg');
+    });
+
+    /* ================================================
+       NO BUTTON LOGIC
+       ================================================ */
+    const btnNo = document.getElementById('btn-no');
+    const btnYes = document.getElementById('btn-yes');
+
+    // Predefined safe positions (percentage-based) so button always lands somewhere visible
+    const safePositions = [
+        { x: 10, y: 15 }, { x: 75, y: 10 }, { x: 85, y: 70 },
+        { x: 10, y: 75 }, { x: 50, y: 10 }, { x: 80, y: 40 },
+        { x: 15, y: 45 }, { x: 60, y: 80 }, { x: 30, y: 15 },
+        { x: 70, y: 65 }, { x: 20, y: 60 }, { x: 55, y: 25 },
+    ];
+    let lastPosIndex = -1;
+
+    function moveNoButton() {
+        noAttempts++;
+
+        // IMPORTANT: Move button out of .scene into <body> so position:fixed works.
+        // CSS transforms on parent elements break position:fixed positioning.
+        if (btnNo.parentElement !== document.body) {
+            document.body.appendChild(btnNo);
+        }
+
+        // Show sad message
+        showSadMessage();
+
+        // Play sad sound
+        playSadSound();
+
+        // Spawn sad emojis
+        spawnSadEmojis();
+
+        // Spawn tears after attempt 3
+        if (noAttempts >= 3) {
+            spawnTears();
+            document.getElementById('bg-layer').classList.add('sad-bg');
+        }
+
+        // Grow Yes button to make the hint obvious
+        const yesScale = Math.min(1.8, 1 + noAttempts * 0.12);
+        btnYes.style.transform = `scale(${yesScale})`;
+        btnYes.style.boxShadow = `0 6px ${20 + noAttempts * 5}px rgba(255, 20, 147, ${0.4 + noAttempts * 0.08})`;
+
+        // Pick a random safe position (different from last one)
+        let posIndex;
+        do {
+            posIndex = Math.floor(Math.random() * safePositions.length);
+        } while (posIndex === lastPosIndex);
+        lastPosIndex = posIndex;
+
+        const pos = safePositions[posIndex];
+
+        btnNo.style.position = 'fixed';
+        btnNo.style.left = pos.x + 'vw';
+        btnNo.style.top = pos.y + 'vh';
+        btnNo.style.zIndex = '999';
+    }
+
+    // Desktop: move on hover
+    btnNo.addEventListener('mouseenter', (e) => {
+        e.preventDefault();
+        moveNoButton();
+    });
+
+    // Mobile: move on touch
+    btnNo.addEventListener('touchstart', (e) => {
+        e.preventDefault();
+        moveNoButton();
+    });
+
+    function showSadMessage() {
+        const msg = document.createElement('div');
+        msg.classList.add('sad-message');
+        msg.textContent = sadMessages[Math.min(noAttempts - 1, sadMessages.length - 1)];
+
+        // Position near the No button
+        const btnRect = btnNo.getBoundingClientRect();
+        msg.style.left = btnRect.left + 'px';
+        msg.style.top = (btnRect.top - 10) + 'px';
+
+        document.body.appendChild(msg);
+        setTimeout(() => msg.remove(), 2000);
+    }
+
+    function spawnSadEmojis() {
+        const emojis = ['😢', '😭', '💔', '🥺', '😿'];
+        for (let i = 0; i < 5 + noAttempts * 2; i++) {
+            setTimeout(() => {
+                const emoji = document.createElement('div');
+                emoji.classList.add('sad-emoji');
+                emoji.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+                emoji.style.left = Math.random() * 100 + 'vw';
+                emoji.style.top = '-30px';
+                document.body.appendChild(emoji);
+                setTimeout(() => emoji.remove(), 2500);
+            }, Math.random() * 500);
+        }
+    }
+
+    function spawnTears() {
+        for (let i = 0; i < 15; i++) {
+            setTimeout(() => {
+                const tear = document.createElement('div');
+                tear.classList.add('tear');
+                tear.style.left = Math.random() * 100 + 'vw';
+                tear.style.top = '-15px';
+                document.body.appendChild(tear);
+                setTimeout(() => tear.remove(), 1500);
+            }, Math.random() * 800);
+        }
+    }
+
+    /* ================================================
+       YES BUTTON - CELEBRATION
+       ================================================ */
+    btnYes.addEventListener('click', () => {
+        if (currentScene !== 'question') return;
+
+        // Clear sad effects
+        document.querySelectorAll('.sad-emoji, .tear, .sad-message').forEach(el => el.remove());
+
+        // Hide No button (it might be on the body now)
+        btnNo.style.display = 'none';
+
+        // Show celebration
+        showScene('celebration');
+        setBg('celebration-bg');
+        playCelebrationSound();
+        startConfetti();
+
+        // After sarcastic line, show the heartfelt follow-up
+        setTimeout(() => {
+            document.getElementById('celeb-sub').textContent = 'Fer je tusin mainu haan kar hi ditti hai, tan suno mere dil di gall...';
+        }, 2500);
+
+        // Then add the photos line
+        setTimeout(() => {
+            document.getElementById('celeb-sub').textContent = 'Par pehlan aapniyan kuch photos dekho...';
+        }, 5000);
+
+        // Then show the door
+        setTimeout(() => {
+            stopConfetti();
+            showScene('door-scene');
+            setBg('door-bg');
+        }, 7500);
+    });
+
+    /* ================================================
+       CONFETTI SYSTEM
+       ================================================ */
+    const confettiCanvas = document.getElementById('confetti-canvas');
+    const confettiCtx = confettiCanvas.getContext('2d');
+
+    function resizeCanvas() {
+        confettiCanvas.width = window.innerWidth;
+        confettiCanvas.height = window.innerHeight;
+    }
+    window.addEventListener('resize', resizeCanvas);
+    resizeCanvas();
+
+    function startConfetti() {
+        confettiParticles = [];
+        confettiRunning = true;
+        const colors = ['#ff69b4', '#ff1493', '#ffd700', '#ff6b6b', '#a855f7', '#ec4899', '#f472b6', '#fbbf24'];
+
+        for (let i = 0; i < 200; i++) {
+            confettiParticles.push({
+                x: Math.random() * confettiCanvas.width,
+                y: -Math.random() * confettiCanvas.height - 50,
+                vx: (Math.random() - 0.5) * 6,
+                vy: Math.random() * 4 + 2,
+                size: Math.random() * 8 + 4,
+                color: colors[Math.floor(Math.random() * colors.length)],
+                rotation: Math.random() * 360,
+                rotSpeed: (Math.random() - 0.5) * 12,
+                isHeart: Math.random() > 0.6,
+                wobble: Math.random() * Math.PI * 2,
+                wobbleSpeed: Math.random() * 0.1 + 0.03,
+            });
+        }
+        animateConfetti();
+    }
+
+    function animateConfetti() {
+        if (!confettiRunning) {
+            confettiCtx.clearRect(0, 0, confettiCanvas.width, confettiCanvas.height);
+            return;
+        }
+        confettiCtx.clearRect(0, 0, confettiCanvas.width, confettiCanvas.height);
+
+        confettiParticles.forEach(p => {
+            p.wobble += p.wobbleSpeed;
+            p.x += p.vx + Math.sin(p.wobble) * 0.5;
+            p.y += p.vy;
+            p.vy += 0.03; // gravity
+            p.rotation += p.rotSpeed;
+
+            confettiCtx.save();
+            confettiCtx.translate(p.x, p.y);
+            confettiCtx.rotate((p.rotation * Math.PI) / 180);
+            confettiCtx.fillStyle = p.color;
+
+            if (p.isHeart) {
+                drawHeart(confettiCtx, 0, 0, p.size);
+            } else {
+                confettiCtx.fillRect(-p.size / 2, -p.size / 4, p.size, p.size / 2);
+            }
+            confettiCtx.restore();
+        });
+
+        // Remove off-screen particles
+        confettiParticles = confettiParticles.filter(p => p.y < confettiCanvas.height + 50);
+
+        if (confettiParticles.length > 0) {
+            requestAnimationFrame(animateConfetti);
+        } else {
+            confettiRunning = false;
+        }
+    }
+
+    function drawHeart(ctx, x, y, size) {
+        const s = size / 2;
+        ctx.beginPath();
+        ctx.moveTo(x, y + s / 4);
+        ctx.bezierCurveTo(x, y - s / 2, x - s, y - s / 2, x - s, y + s / 8);
+        ctx.bezierCurveTo(x - s, y + s / 1.5, x, y + s, x, y + s);
+        ctx.bezierCurveTo(x, y + s, x + s, y + s / 1.5, x + s, y + s / 8);
+        ctx.bezierCurveTo(x + s, y - s / 2, x, y - s / 2, x, y + s / 4);
+        ctx.fill();
+    }
+
+    function stopConfetti() {
+        confettiRunning = false;
+    }
+
+    /* ================================================
+       DOOR SCENE
+       ================================================ */
+    document.getElementById('door-wrapper').addEventListener('click', () => {
+        const panel = document.getElementById('door-panel');
+        if (panel.classList.contains('open')) return;
+
+        playDoorCreak();
+        panel.classList.add('open');
+        document.getElementById('door-glow').classList.add('visible');
+        document.getElementById('door-light').classList.add('visible');
+
+        // Transition to photo gallery
+        setTimeout(() => {
+            showScene('photo-gallery');
+            setBg('letter-bg');
+            initGallery();
+        }, 2500);
+    });
+
+    /* ================================================
+       PHOTO GALLERY (click-through)
+       ================================================ */
+    let galleryImages = [];
+    let galleryIndex = 0;
+
+    function initGallery() {
+        const container = document.getElementById('photo-gallery');
+        const photos = CONFIG.photos;
+        galleryIndex = 0;
+        galleryImages = [];
+
+        if (photos.length === 0) {
+            // No photos — skip straight to letter
+            showScene('love-letter');
+            setBg('letter-bg');
+            startTyping();
+            return;
+        }
+
+        // Create full-screen images
+        photos.forEach((src, i) => {
+            const img = document.createElement('img');
+            img.src = src;
+            img.classList.add('gallery-photo');
+            if (i === 0) img.classList.add('active');
+            img.onerror = () => { img.style.display = 'none'; };
+            container.insertBefore(img, container.firstChild);
+            galleryImages.push(img);
+        });
+
+        updateGalleryCounter();
+
+        // Click/tap to advance
+        container.addEventListener('click', advanceGallery);
+    }
+
+    const exitAnimations = ['exit-left', 'exit-right', 'exit-spin'];
+
+    function advanceGallery() {
+        if (galleryIndex >= galleryImages.length - 1) {
+            // Last photo — go to love letter
+            showScene('love-letter');
+            setBg('letter-bg');
+            startTyping();
+            return;
+        }
+
+        // Pick a random exit animation for the leaving photo
+        const leaving = galleryImages[galleryIndex];
+        const exitClass = exitAnimations[Math.floor(Math.random() * exitAnimations.length)];
+        leaving.classList.remove('active');
+        leaving.classList.add(exitClass);
+
+        // Clean up exit class after transition finishes
+        setTimeout(() => {
+            leaving.classList.remove(exitClass);
+        }, 600);
+
+        // Show the next photo
+        galleryIndex++;
+        galleryImages[galleryIndex].classList.add('active');
+        updateGalleryCounter();
+    }
+
+    function updateGalleryCounter() {
+        document.getElementById('gallery-counter').textContent =
+            `${galleryIndex + 1} / ${galleryImages.length}`;
+    }
+
+    /* ================================================
+       TYPING EFFECT
+       ================================================ */
+    async function startTyping() {
+        const letterEl = document.getElementById('letter-text');
+        const scrollEl = document.getElementById('love-letter');
+        const text = CONFIG.loveLetter;
+        letterEl.textContent = '';
+
+        const cursor = document.createElement('span');
+        cursor.classList.add('typing-cursor');
+        cursor.textContent = '|';
+        letterEl.appendChild(cursor);
+
+        // Track if user has scrolled up manually
+        let userScrolled = false;
+        scrollEl.addEventListener('scroll', () => {
+            const isAtBottom = scrollEl.scrollHeight - scrollEl.scrollTop - scrollEl.clientHeight < 40;
+            userScrolled = !isAtBottom;
+        });
+
+        for (let i = 0; i < text.length; i++) {
+            const char = text.charAt(i);
+            letterEl.insertBefore(document.createTextNode(char), cursor);
+
+            // Only auto-scroll if user hasn't scrolled up
+            if (!userScrolled) {
+                scrollEl.scrollTop = scrollEl.scrollHeight;
+            }
+
+            // Variable typing speed
+            let delay = 35;
+            if (char === '\n') delay = 400;
+            else if (char === '.' || char === '!' || char === '?') delay = 300;
+            else if (char === ',') delay = 150;
+            else delay = 30 + Math.random() * 25;
+
+            await sleep(delay);
+        }
+
+        // Show signature and replay button
+        cursor.remove();
+        await sleep(800);
+        document.getElementById('letter-signature').textContent = CONFIG.signature;
+        document.getElementById('letter-signature').classList.add('visible');
+        await sleep(500);
+        document.getElementById('replay-btn').classList.add('visible');
+    }
+
+    function sleep(ms) {
+        return new Promise(resolve => setTimeout(resolve, ms));
+    }
+
+    /* ================================================
+       REPLAY
+       ================================================ */
+    function replay() {
+        // Reset everything
+        noAttempts = 0;
+        lastPosIndex = -1;
+        // Move No button back into the buttons container
+        const buttonsArea = document.getElementById('buttons-area');
+        buttonsArea.appendChild(btnNo);
+        btnNo.style.display = '';
+        btnNo.style.transform = '';
+        btnNo.style.position = '';
+        btnNo.style.left = '';
+        btnNo.style.top = '';
+        btnNo.style.zIndex = '';
+        btnYes.style.transform = '';
+        btnYes.style.boxShadow = '';
+
+        // Reset door
+        document.getElementById('door-panel').classList.remove('open');
+        document.getElementById('door-glow').classList.remove('visible');
+        document.getElementById('door-light').classList.remove('visible');
+
+        // Reset letter
+        document.getElementById('letter-signature').classList.remove('visible');
+        document.getElementById('replay-btn').classList.remove('visible');
+
+        // Reset gallery - remove old images
+        const gallery = document.getElementById('photo-gallery');
+        gallery.querySelectorAll('.gallery-photo').forEach(img => img.remove());
+        galleryImages = [];
+        galleryIndex = 0;
+
+        // Back to question
+        showScene('question');
+        setBg('question-bg');
+    }
+
+    /* ================================================
+       INIT
+       ================================================ */
+    createStars();
+
+    </script>
+</body>
+</html>
