@@ -921,7 +921,7 @@
 
     <!-- ===== SCENE 2: CELEBRATION ===== -->
     <div id="celebration" class="scene">
-        <div class="celebration-text cursive" id="celeb-main">Huh, mainu tan pta hi c tusin haan karoge 😎</div>
+        <div class="celebration-text cursive" id="celeb-main"></div>
         <div class="celebration-sub" id="celeb-sub"></div>
     </div>
 
@@ -1288,7 +1288,26 @@ Tu meri duniya ae. ❤️`,
     /* ================================================
        YES BUTTON - CELEBRATION
        ================================================ */
-    btnYes.addEventListener('click', () => {
+    async function typeInto(el, text, speed = 40) {
+        el.textContent = '';
+        const cursor = document.createElement('span');
+        cursor.classList.add('typing-cursor');
+        cursor.textContent = '|';
+        el.appendChild(cursor);
+
+        for (let i = 0; i < text.length; i++) {
+            el.insertBefore(document.createTextNode(text.charAt(i)), cursor);
+            let delay = speed;
+            const ch = text.charAt(i);
+            if (ch === '.' || ch === '!' || ch === '?') delay = 200;
+            else if (ch === ',') delay = 120;
+            else delay = speed + Math.random() * 20;
+            await sleep(delay);
+        }
+        cursor.remove();
+    }
+
+    btnYes.addEventListener('click', async () => {
         if (currentScene !== 'question') return;
 
         // Clear sad effects
@@ -1303,22 +1322,22 @@ Tu meri duniya ae. ❤️`,
         playCelebrationSound();
         startConfetti();
 
-        // After sarcastic line, show the heartfelt follow-up
-        setTimeout(() => {
-            document.getElementById('celeb-sub').textContent = 'Fer je tusin mainu haan kar hi ditti hai, tan suno mere dil di gall...';
-        }, 2500);
+        // Type out the sarcastic line
+        await typeInto(document.getElementById('celeb-main'), 'Huh, mainu tan pta hi c tusin haan karoge 😎');
 
-        // Then add the photos line
-        setTimeout(() => {
-            document.getElementById('celeb-sub').textContent = 'Par pehlan aapniyan kuch photos dekho...';
-        }, 5000);
+        // Pause, then type the heartfelt follow-up
+        await sleep(1200);
+        await typeInto(document.getElementById('celeb-sub'), 'Fer je tusin mainu haan kar hi ditti hai, tan suno mere dil di gall...');
 
-        // Then show the door
-        setTimeout(() => {
-            stopConfetti();
-            showScene('door-scene');
-            setBg('door-bg');
-        }, 7500);
+        // Pause, then type the photos line
+        await sleep(1200);
+        await typeInto(document.getElementById('celeb-sub'), 'Par pehlan aapniyan kuch photos dekho...');
+
+        // Pause, then show the door
+        await sleep(1500);
+        stopConfetti();
+        showScene('door-scene');
+        setBg('door-bg');
     });
 
     /* ================================================
